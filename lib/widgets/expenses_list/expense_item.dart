@@ -18,7 +18,7 @@ class ExpenseItem extends StatelessWidget {
             SizedBox(height: 8),
             Row(
               children: [
-                Text('\$${expense.amount.toStringAsPrecision(2)}'),
+                Text('\$${expense.amount.toStringAsFixed(2)}'),
                 Spacer(),
                 Row(
                   children: [
