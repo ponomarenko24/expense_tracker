@@ -13,6 +13,11 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
 
+  void _presentDatePicker() {
+    final now = DateTime.now();
+    showDatePicker(context: context, firstDate: DateTime(now.year - 1), lastDate: now);
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -31,20 +36,43 @@ class _NewExpenseState extends State<NewExpense> {
             maxLength: 50,
             decoration: InputDecoration(label: Text('Title')),
           ),
-          TextField(
-            controller: _amountController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-
-            decoration: InputDecoration(
-              prefixText: '\$ ',
-              label: Text('Amount'),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    prefixText: '\$ ',
+                    label: Text('Amount'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('Select data'),
+                    IconButton(
+                      onPressed: () {_presentDatePicker();},
+                      icon: Icon(Icons.calendar_month),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+
           SizedBox(height: 24),
           Row(
             children: [
               Spacer(),
-              TextButton(onPressed: () {}, child: Text('Cancel')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
               Spacer(),
               ElevatedButton(
                 onPressed: () {
