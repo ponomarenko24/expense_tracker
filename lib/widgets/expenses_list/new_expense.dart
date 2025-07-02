@@ -1,3 +1,4 @@
+import 'package:expence_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class NewExpense extends StatefulWidget {
@@ -12,11 +13,16 @@ class NewExpense extends StatefulWidget {
 class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _selectedDate;
 
-  void _presentDatePicker() {
+  void _presentDatePicker() async {
     final now = DateTime.now();
-    showDatePicker(context: context, firstDate: DateTime(now.year - 1), lastDate: now);
+    final pickedDate = await showDatePicker(context: context, firstDate: DateTime(now.year - 1), lastDate: now);
+    setState(() {
+      _selectedDate = pickedDate;
+    });
   }
+  
 
   @override
   void dispose() {
@@ -52,7 +58,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('Select data'),
+                    _selectedDate == null ? Text('No selected data') : Text(formatter.format(_selectedDate!)),
                     IconButton(
                       onPressed: () {_presentDatePicker();},
                       icon: Icon(Icons.calendar_month),
