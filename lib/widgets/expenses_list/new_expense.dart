@@ -14,15 +14,19 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
+  Category _selectedCategory = Category.leisure;
 
   void _presentDatePicker() async {
     final now = DateTime.now();
-    final pickedDate = await showDatePicker(context: context, firstDate: DateTime(now.year - 1), lastDate: now);
+    final pickedDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(now.year - 1),
+      lastDate: now,
+    );
     setState(() {
       _selectedDate = pickedDate;
     });
   }
-  
 
   @override
   void dispose() {
@@ -58,9 +62,13 @@ class _NewExpenseState extends State<NewExpense> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _selectedDate == null ? Text('No selected data') : Text(formatter.format(_selectedDate!)),
+                    _selectedDate == null
+                        ? Text('No selected data')
+                        : Text(formatter.format(_selectedDate!)),
                     IconButton(
-                      onPressed: () {_presentDatePicker();},
+                      onPressed: () {
+                        _presentDatePicker();
+                      },
                       icon: Icon(Icons.calendar_month),
                     ),
                   ],
@@ -72,6 +80,26 @@ class _NewExpenseState extends State<NewExpense> {
           SizedBox(height: 24),
           Row(
             children: [
+              DropdownButton(
+                value: _selectedCategory,
+                items:
+                    Category.values
+                        .map(
+                          (category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category.name.toUpperCase()),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (value) {
+                  if (value == null) {
+                    return;
+                  }
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                },
+              ),
               Spacer(),
               TextButton(
                 onPressed: () {
@@ -79,7 +107,6 @@ class _NewExpenseState extends State<NewExpense> {
                 },
                 child: Text('Cancel'),
               ),
-              Spacer(),
               ElevatedButton(
                 onPressed: () {
                   print(_titleController.text);
@@ -87,7 +114,6 @@ class _NewExpenseState extends State<NewExpense> {
                 },
                 child: Text('Save Expense'),
               ),
-              Spacer(),
             ],
           ),
         ],
